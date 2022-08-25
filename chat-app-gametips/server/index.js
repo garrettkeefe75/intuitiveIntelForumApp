@@ -1,0 +1,87 @@
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const pool = require("./db");
+
+//middleware
+app.use(cors());
+app.use(express.json());
+
+//Routes
+
+//Create a thread
+
+app.post("/threads", async (req, res) => {
+  try {
+    const { description } = req.body;
+    const newThread = await pool.query(
+      "INSERT INTO thread (description) VALUES($1) RETURNING *",
+      [description]
+    );
+
+    res.json(newThread.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//get all threads
+
+app.get("/threads", async (req, res) => {
+  try {
+    const allThreads = await pool.query("SELECT * FROM thread");
+    res.json(allThreads.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//get a thread
+
+app.get("/threads/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const oneThread = await pool.query(
+      "SELECT * FROM thread WHERE thread_id = $1",
+      [id]
+    );
+    res.json(oneThread.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//update thread
+
+app.put("/threads/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updateThread = await pool.query(
+      "UPDATE thread SET description = $1 WHERE thread_id = $2",
+      [description, id]
+    );
+    res.json("Thread is updated");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//delete a thread
+//Add on more details if needed to upadtre on the thread
+app.delete("/threads/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteThread = await pool.query(
+      "DELETE FROM thread WHERE thread_id = $1",
+      [id]
+    );
+    res.json("Thread is deleted");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.listen(5000, () => {
+  console.log("started on port 5000");
+});
