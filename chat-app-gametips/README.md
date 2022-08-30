@@ -9,10 +9,17 @@ close then reopen the console. If that doesn't work, refer to https://github.com
 
 nvm install 16
 
-Open the frontend folder
+Commands	
 
-cd ./frontend/
+cd into server 
+  server :
+	  npm i express pg cors
+    npm install nodemon --save-dev
 
-Install the node dependencies (Note: yes, its npm not nvm.)
+cd into frontend
+  Front end:
+    rm -rf node_modules       (remove node_modules if there are any previous dependencies)
+	  npm install               (Install the node dependencies (Note: yes, its npm not nvm.))
+    
+    npm install @mui/material @emotion/react @emotion/styled
 
-npm install -g node-modules
