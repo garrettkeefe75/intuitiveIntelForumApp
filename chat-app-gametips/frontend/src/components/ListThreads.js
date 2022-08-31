@@ -69,7 +69,7 @@ const ListThreads = () => {
                     },
                   }}
                 >
-                  <TableCell>Dummy Game</TableCell>
+                  <TableCell>{thread.game_name}</TableCell>
                   <TableCell>{thread.description}</TableCell>
                   <TableCell>
                     <Button variant="contained">Open Thread</Button>
