@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableHead,
@@ -9,6 +9,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
+
 const ListThreads = () => {
   const [threads, setThreads] = useState([]);
 
@@ -84,4 +85,5 @@ const ListThreads = () => {
   );
 };
 
+// eslint-disable-next-line
 export default ListThreads;

@@ -1,21 +1,19 @@
-import React, { Fragment } from "react";
-import AppBar from "./components/AppBar";
+import React from "react";
 import "./App.css";
-import { Stack } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 //components
-import InputThread from "./components/InputThread";
-import ListThreads from "./components/ListThreads";
+import SignIn from "./components/LoginForm";
+import ThreadListingPage from "./components/ThreadsLanding";
 
 function App() {
   return (
-    <Fragment>
-      <Stack spacing={3}>
-        <AppBar />
-        <InputThread />
-        <ListThreads />
-      </Stack>
-    </Fragment>
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/chatRooms" element={<ThreadListingPage />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -3,11 +3,12 @@ import { Button, Container, TextField, Grid } from "@mui/material";
 
 const InputThread = () => {
   const [description, setDescription] = useState("");
+  const [gameName, setGameName] = useState("");
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const body = { description };
+      const body = { gameName, description };
       await fetch("http://localhost:5000/threads", {
         method: "POST",
         headers: {
@@ -31,6 +32,15 @@ const InputThread = () => {
                 <TextField
                   id="outlined-basic"
                   label="Input Game Name"
+                  variant="outlined"
+                  value={gameName}
+                  onChange={(e) => {
+                    setGameName(e.target.value);
+                  }}
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="description"
                   variant="outlined"
                   value={description}
                   onChange={(e) => {
