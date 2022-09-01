@@ -13,10 +13,10 @@ app.use(express.json());
 
 app.post("/threads", async (req, res) => {
   try {
-    const { description } = req.body;
+    const { gameName, description } = req.body;
     const newThread = await pool.query(
-      "INSERT INTO thread (description) VALUES($1) RETURNING *",
-      [description]
+      "INSERT INTO thread (description, game_name) VALUES($1, $2) RETURNING *",
+      [description, gameName]
     );
 
     res.json(newThread.rows[0]);
@@ -24,6 +24,16 @@ app.post("/threads", async (req, res) => {
     console.error(error.message);
   }
 });
+
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(email);
+    console.log(password);
+  } catch (error) {
+    console.error(error.message);
+  }
+})
 
 //get all threads
 
