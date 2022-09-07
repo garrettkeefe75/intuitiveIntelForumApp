@@ -1,149 +1,58 @@
-import * as React from "react";
-import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Game Tips
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const theme = createTheme();
+import React, { useState, useEffect } from 'react';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { gapi } from 'gapi-script';
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [ profile, setProfile ] = useState([]);
+    const clientId = '92924635618-jfp2hmchkrqlc6at7iakf4180jb4aeas.apps.googleusercontent.com';
+    useEffect(() => {
+        const initClient = () => {
+            gapi.client.init({
+                clientId: clientId,
+                scope: ''
+            });
+        };
+        gapi.load('client:auth2', initClient);
+    });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const body = { email, password };
-      await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+    const onSuccess = (res) => {
+        setProfile(res.profileObj);
+    };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Game Tips Login
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              id="email"
-              label="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              href="/chatRooms"
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
-  );
+    const onFailure = (err) => {
+        console.log('failed', err);
+    };
+
+    const logOut = () => {
+        setProfile(null);
+    };
+
+    return (
+        <div>
+            <h2>React Google Login</h2>
+            <br />
+            <br />
+            {profile ? (
+                <div>
+                    <img src={profile.imageUrl} alt="user" />
+                    <h3>User Logged in</h3>
+                    <p>Name: {profile.name}</p>
+                    <p>Email Address: {profile.email}</p>
+                    <p>Google ID: {profile.googleId}</p>
+                    <br />
+                    <br />
+                    <GoogleLogout clientId={clientId} buttonText="Log out" onLogoutSuccess={logOut} />
+                </div>
+            ) : (
+                <GoogleLogin
+                    clientId={clientId}
+                    buttonText="Sign in with Google"
+                    onSuccess={onSuccess}
+                    onFailure={onFailure}
+                    cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
+                />
+            )}
+        </div>
+    );
 }
