@@ -28,8 +28,9 @@ app.post("/threads", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
-    console.log(password);
+    const user = await pool.query(
+      "SELECT "
+    )
   } catch (error) {
     console.error(error.message);
   }
@@ -46,16 +47,18 @@ app.get("/threads", async (req, res) => {
   }
 });
 
-//get a thread
+//queries database for the thread contents of a given thread. returns all rows.
 
 app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT * FROM thread WHERE thread_id = $1",
+      "SELECT (thread_contents.user_id, users.username, thread_contents.contents) \
+       FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
+       WHERE thread_contents.thread_id = $1",
       [id]
     );
-    res.json(oneThread.rows[0]);
+    res.json(oneThread.rows);
   } catch (error) {
     console.error(error.message);
   }
