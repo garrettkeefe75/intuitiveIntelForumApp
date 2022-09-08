@@ -1,9 +1,16 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Button, Container, TextField, Grid } from "@mui/material";
 
 const InputThread = () => {
   const [description, setDescription] = useState("");
   const [gameName, setGameName] = useState("");
+  const [ profile, setProfile ] = useState([]);
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      setProfile(loggedInUser);
+    }
+  }, []);
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
