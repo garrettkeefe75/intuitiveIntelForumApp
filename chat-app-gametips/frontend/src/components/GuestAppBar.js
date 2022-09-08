@@ -1,5 +1,5 @@
-//import * as React from "react";
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,23 +7,12 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Avatar from "@mui/material/Avatar";
 
-export default function ButtonAppBar() {
-  const [ profile, setProfile ] = useState([]);
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      setProfile(loggedInUser);
-    }
-  }, []);
-
-  const logOut = () => {
-    setProfile(null);
-    localStorage.clear();
-    window.location.reload(false);
+export default function GuestButtonAppBar() {
+  const navigate = useNavigate();
+  const loginScreen = () => {
+    navigate('/');
   };
-  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -40,8 +29,7 @@ export default function ButtonAppBar() {
           <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
             Game Tips
           </Typography>
-          <Button color="inherit" onClick={logOut}>Logout</Button>
-          <Avatar alt={profile.name} src={profile.imageUrl}/>
+          <Button color="inherit" onClick={loginScreen}>Login</Button>
         </Toolbar>
       </AppBar>
     </Box>

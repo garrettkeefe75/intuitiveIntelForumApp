@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { gapi } from 'gapi-script';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
     const [ profile, setProfile ] = useState([]);
     const clientId = '92924635618-jfp2hmchkrqlc6at7iakf4180jb4aeas.apps.googleusercontent.com';
+    const navigate = useNavigate();
     useEffect(() => {
         const initClient = () => {
             gapi.client.init({
@@ -17,6 +19,8 @@ export default function SignIn() {
 
     const onSuccess = (res) => {
         setProfile(res.profileObj);
+        localStorage.setItem('user', profile);
+        navigate('/chatRooms');
     };
 
     const onFailure = (err) => {
@@ -25,6 +29,7 @@ export default function SignIn() {
 
     const logOut = () => {
         setProfile(null);
+        localStorage.clear();
     };
 
     return (
