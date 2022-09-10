@@ -24,7 +24,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Game Tips
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -40,7 +40,7 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
+    try {
       const body = { email, password };
       await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -70,7 +70,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Game Tips Login
           </Typography>
           <Box
             component="form"
@@ -106,6 +106,15 @@ export default function SignIn() {
                 setPassword(e.target.value);
               }}
             />
+            <TextField
+              margin="normal"
+              fullWidth
+              id="email"
+              label="email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -115,6 +124,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              href="/chatRooms"
             >
               Sign In
             </Button>
