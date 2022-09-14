@@ -5,10 +5,12 @@ const InputThread = () => {
   const [description, setDescription] = useState("");
   const [gameName, setGameName] = useState("");
   const [ profile, setProfile ] = useState([]);
+  const [ loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
+    const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
       setProfile(loggedInUser);
+      setLoggedIn(true);
     }
   }, []);
 
