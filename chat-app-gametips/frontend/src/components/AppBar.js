@@ -37,11 +37,36 @@ export default function ButtonAppBar() {
     setLoggedIn(false);
   };
 
-  const onSuccess = (res) => {
+  const onSuccess = async (res) => {
+    var possibleUser = [];
+    const email = res.profileObj.email;
+    const name = res.profileObj.name;
+    try{
+      const response1 = await fetch("http://localhost:5000/getUser/".concat(email));
+      possibleUser = await response1.json();
+    } catch (error) {
+      console.log(error.message);
+    }
+    if(possibleUser.length === 0){
+      try {
+        const body = { email, name };
+        const response2 = await fetch("http://localhost:5000/newUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+        possibleUser = await response2.json();
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
     const myObject = {
-      name : res.profileObj.name,
+      user_id : possibleUser[0].user_id,
+      name : possibleUser[0].username,
       imageUrl : res.profileObj.imageUrl,
-      email : res.profileObj.email,
+      email : email,
       googleId : res.profileObj.googleId
     };
     console.log(myObject);

@@ -11,7 +11,31 @@ app.use(express.json());
 
 //Create a thread
 
-//INSERT INTO thread (descriptioin, GameName) VALUES ($1, $2) RETURNING *;
+app.get("/getUser/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+    res.json(user.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.post("/newUser", async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    const newUser = await pool.query(
+      "INSERT INTO users (username, email) VALUES($1, $2) RETURNING *",
+      [name, email]
+    );
+    res.json(newUser.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
 
 app.post("/threads", async (req, res) => {
   try {
@@ -26,17 +50,6 @@ app.post("/threads", async (req, res) => {
     console.error(error.message);
   }
 });
-
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await pool.query(
-      "SELECT "
-    )
-  } catch (error) {
-    console.error(error.message);
-  }
-})
 
 //get all threads
 
