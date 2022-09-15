@@ -24,6 +24,19 @@ app.get("/getUser/:email", async (req, res) => {
   }
 });
 
+app.get("/checkUserName/:user", async (req, res) => {
+  try {
+    const { userName } = req.params;
+    const possibleUser = await pool.query(
+      "SELECT * FROM users WHERE username = $1",
+      [userName]
+    );
+    res.json(possibleUser.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 app.post("/newUser", async (req, res) => {
   try {
     const { email, name } = req.body;
