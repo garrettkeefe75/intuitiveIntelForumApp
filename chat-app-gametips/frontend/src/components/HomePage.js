@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { Typography, Link } from '@mui/material';
 import { Stack } from '@mui/system';
-import { Fragment } from 'react';
 import ButtonAppBar from "./AppBar";
 
-export default function SignIn() {
+export default function HomePage() {
   return (
     <Fragment>
       <Stack spacing={3}>

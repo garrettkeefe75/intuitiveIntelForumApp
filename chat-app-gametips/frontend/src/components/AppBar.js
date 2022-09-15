@@ -8,11 +8,13 @@ import { gapi } from 'gapi-script';
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
+import { useNavigate } from "react-router-dom";
 
 export default function ButtonAppBar() {
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const clientId = '92924635618-jfp2hmchkrqlc6at7iakf4180jb4aeas.apps.googleusercontent.com';
+  const navigate = useNavigate();
   useEffect(() => {
     const initClient = () => {
       gapi.client.init({
@@ -33,7 +35,7 @@ export default function ButtonAppBar() {
 
   const logOut = () => {
     setProfile(null);
-    localStorage.removeItem('user');
+    window.localStorage.clear();
     setLoggedIn(false);
   };
 
@@ -48,19 +50,9 @@ export default function ButtonAppBar() {
       console.log(error.message);
     }
     if(possibleUser.length === 0){
-      try {
-        const body = { email, name };
-        const response2 = await fetch("http://localhost:5000/newUser", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-        possibleUser = await response2.json();
-      } catch (error) {
-        console.log(error.message);
-      }
+      console.error("User doesn't exist");
+      navigate("/signUp");
+      return null;
     }
     const myObject = {
       user_id : possibleUser[0].user_id,
