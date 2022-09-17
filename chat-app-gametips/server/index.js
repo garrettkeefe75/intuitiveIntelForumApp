@@ -123,6 +123,19 @@ app.delete("/threads/:id", async (req, res) => {
   }
 });
 
+// app.get("/", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const oneThread = await pool.query(
+//       "SELECT * FROM thread WHERE thread_id = $1",
+//       [id]
+//     );
+//     res.json(oneThread.rows[0]);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// });
+
 app.listen(5000, () => {
   console.log("started on port 5000");
 });
