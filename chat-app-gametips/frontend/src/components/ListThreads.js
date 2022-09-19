@@ -73,7 +73,12 @@ const ListThreads = () => {
                   <TableCell>{thread.game_name}</TableCell>
                   <TableCell>{thread.description}</TableCell>
                   <TableCell>
-                    <Button variant="contained">Open Thread</Button>
+                    <Button
+                      variant="contained"
+                      href={"/Comments/" + thread.thread_id}
+                    >
+                      Open Thread
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -21,6 +21,15 @@ const imgLink =
 const Comments = () => {
   //Create functions to talk to database
 
+  const getComments = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/threads/".concat());
+      const jsonData = await response.json();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <div style={{ padding: 14 }} className="App">
       <h1>Thread Discusion</h1>

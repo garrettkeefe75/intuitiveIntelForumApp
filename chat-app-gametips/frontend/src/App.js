@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/chatRooms" element={<ThreadListingPage />} />
-        <Route path="/Comments" element={<Comments />} />
+        <Route path="/Comments/:id" element={<Comments />} />
         <Route path="/signUp" element={<SignUp />} />
       </Routes>
     </Router>
