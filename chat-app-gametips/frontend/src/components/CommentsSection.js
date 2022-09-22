@@ -12,21 +12,21 @@ export default function Comments() { //Create functions to talk to database
   const [comments, setComments] = useState([]);
   const { id } = useParams();
 
-  const getComments = async () => {
-    try {
-      console.log(id);
-      const response = await fetch("http://localhost:5000/threads/".concat(String(id)));
-      const jsonData = await response.json();
-      console.log(jsonData);
-      return jsonData;
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+
 
   useEffect(() => {
-    setComments(getComments());
-  }, []);
+    const getComments = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/threads/".concat(String(id)));
+        const jsonData = await response.json();
+        setComments(jsonData);
+        console.log(jsonData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getComments();
+  }, [id]);
 
   return (
     <Fragment>
@@ -35,6 +35,22 @@ export default function Comments() { //Create functions to talk to database
         <div style={{ padding: 14 }} className="App">
           <h1>Thread Discusion</h1>
           <Paper style={{ padding: "40px 20px" }}>
+            {comments.map((comment) => (
+              <Grid key={comment.content_id} container wrap="nowrap" spacing={2}>
+                <Grid item>
+                  <Avatar alt={comment.username} src={imgLink} />
+                </Grid>
+                <Grid justifyContent="left" item xs zeroMinWidth>
+                  <h4 style={{ margin: 0, textAlign: "left" }}>{comment.username}</h4>
+                  <p style={{ textAlign: "left" }}>
+                    {comment.contents}
+                  </p>
+                  <p style={{ textAlign: "left", color: "gray" }}>
+                    posted 1 minute ago
+                  </p>
+                </Grid>
+              </Grid>
+            ))}
             <Grid container wrap="nowrap" spacing={2}>
               <Grid item>
                 <Avatar alt="Remy Sharp" src={imgLink} />

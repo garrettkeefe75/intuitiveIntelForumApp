@@ -81,7 +81,7 @@ app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT (thread_contents.user_id, users.username, thread_contents.contents) \
+      "SELECT (thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents) \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
        WHERE thread_contents.thread_id = $1",
       [id]
