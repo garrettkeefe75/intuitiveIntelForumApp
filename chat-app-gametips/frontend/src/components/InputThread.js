@@ -1,11 +1,18 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Button, Container, TextField, Grid } from "@mui/material";
+import {
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Grid,
+  TextareaAutosize,
+} from "@mui/material";
 
 const InputThread = () => {
   const [description, setDescription] = useState("");
   const [gameName, setGameName] = useState("");
-  const [ profile, setProfile ] = useState([]);
-  const [ loggedIn, setLoggedIn] = useState(false);
+  const [profile, setProfile] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
@@ -34,27 +41,41 @@ const InputThread = () => {
     <>
       <Fragment>
         <form>
-          <Container maxWidth="sm">
-            <h1>Create A New Thread</h1>
-            <Grid container spacing={8}>
-              <Grid item sm={8}>
+          <Container maxWidth="md">
+            <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+              Create A New Thread
+            </Typography>
+            <Grid
+              container
+              spacing={8}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
+              <Grid
+                item
+                sm={12}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
                 <TextField
-                  id="outlined-basic"
+                  id="inputGameName"
                   label="Input Game Name"
+                  color="secondary"
                   variant="outlined"
                   value={gameName}
                   onChange={(e) => {
                     setGameName(e.target.value);
                   }}
+                  sx={{ width: 300, marginTop: "15px" }}
                 />
-                <TextField
-                  id="outlined-basic"
-                  label="description"
-                  variant="outlined"
-                  value={description}
+                <TextareaAutosize
+                  id="inputGameDescription"
+                  aria-label="Description"
+                  placeholder="Description"
                   onChange={(e) => {
                     setDescription(e.target.value);
                   }}
+                  value={description}
+                  minRows={4}
+                  style={{ width: 300, marginTop: "15px", padding: "14px" }}
                 />
               </Grid>
               <Grid item>

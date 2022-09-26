@@ -10,14 +10,20 @@ import SignUp from "./components/SignUp";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/chatRooms" element={<ThreadListingPage />} />
-        <Route path="/Comments/:id" element={<Comments />} />
-        <Route path="/signUp" element={<SignUp />} />
-      </Routes>
-    </Router>
+    <div
+      style={{
+        backgroundColor: "#EEE8AA",
+      }}
+    >
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/chatRooms" element={<ThreadListingPage />} />
+          <Route path="/Comments/:id" element={<Comments />} />
+          <Route path="/signUp" element={<SignUp />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 

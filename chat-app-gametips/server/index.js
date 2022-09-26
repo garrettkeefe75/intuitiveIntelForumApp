@@ -14,10 +14,9 @@ app.use(express.json());
 app.get("/getUser/:email", async (req, res) => {
   try {
     const { email } = req.params;
-    const user = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
     res.json(user.rows);
   } catch (error) {
     console.error(error.message);
@@ -81,12 +80,15 @@ app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT (thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents) \
+      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
        WHERE thread_contents.thread_id = $1",
       [id]
     );
     res.json(oneThread.rows);
+    // oneThread.rows.map((thread) => {
+    //   console.log(thread);
+    // });
   } catch (error) {
     console.error(error.message);
   }
