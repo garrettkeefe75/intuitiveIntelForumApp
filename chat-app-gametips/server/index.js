@@ -94,6 +94,18 @@ app.get("/threads/:id", async (req, res) => {
   }
 });
 
+app.post("/threads/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const {user_id, contents} = req.body;
+    const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents) VALUES($1, $2, $3) RETURNING *",
+  [id, user_id, contents]);
+    res.json(insertComment.rows[0])
+  } catch (error) {
+    console.error(error.message)
+  }
+});
+
 //update thread
 
 app.put("/threads/:id", async (req, res) => {
