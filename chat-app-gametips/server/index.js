@@ -38,10 +38,10 @@ app.get("/checkUserName/:user", async (req, res) => {
 
 app.post("/newUser", async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email, name, imgurl } = req.body;
     const newUser = await pool.query(
-      "INSERT INTO users (username, email) VALUES($1, $2) RETURNING *",
-      [name, email]
+      "INSERT INTO users (username, email, imgurl) VALUES($1, $2, $3) RETURNING *",
+      [name, email, imgurl]
     );
     res.json(newUser.rows);
   } catch (error) {
@@ -80,7 +80,7 @@ app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents \
+      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, users.imgurl \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
        WHERE thread_contents.thread_id = $1",
       [id]

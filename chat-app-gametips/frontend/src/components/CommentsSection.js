@@ -50,7 +50,7 @@ export default function Comments() {
                   spacing={2}
                 >
                   <Grid item>
-                    <Avatar alt={comment.username} src={imgLink} />
+                    <Avatar alt={comment.username} src={comment.imgurl} />
                   </Grid>
                   <Grid justifyContent="left" item xs zeroMinWidth>
                     <h4 style={{ margin: 0, textAlign: "left" }}>

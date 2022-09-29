@@ -60,8 +60,8 @@ export default function ButtonAppBar() {
     const myObject = {
       user_id: possibleUser[0].user_id,
       name: possibleUser[0].username,
-      imageUrl: res.profileObj.imageUrl,
-      email: email,
+      imageUrl: possibleUser[0].imgurl,
+      email: possibleUser[0].email,
       googleId: res.profileObj.googleId,
     };
     console.log(myObject);

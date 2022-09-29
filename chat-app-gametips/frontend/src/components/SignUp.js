@@ -37,6 +37,7 @@ export default function SignUp() {
         var possibleUser = []
         const email = res.profileObj.email;
         const name = userName;
+        const imgurl = res.profileObj.imageUrl
         console.log(name);
         try {
             const response1 = await fetch("http://localhost:5000/checkUserName/".concat(name));
@@ -57,7 +58,7 @@ export default function SignUp() {
         }
         if (possibleUser.length === 0) {
             try {
-                const body = { email, name };
+                const body = { email, name, imgurl };
                 const response3 = await fetch("http://localhost:5000/newUser", {
                     method: "POST",
                     headers: {
@@ -72,9 +73,9 @@ export default function SignUp() {
         }
         const myObject = {
             user_id: possibleUser[0].user_id,
-            name: name,
-            imageUrl: res.profileObj.imageUrl,
-            email: email,
+            name: possibleUser[0].username,
+            imageUrl: possibleUser[0].imgurl,
+            email: possibleUser[0].email,
             googleId: res.profileObj.googleId
         };
         console.log(myObject);
