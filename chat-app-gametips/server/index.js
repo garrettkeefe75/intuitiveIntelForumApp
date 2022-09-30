@@ -80,7 +80,8 @@ app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, users.imgurl \
+      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, \
+       users.imgurl, thread_contents.unix_time \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
        WHERE thread_contents.thread_id = $1",
       [id]
@@ -98,11 +99,13 @@ app.post("/threads/:id", async (req, res) => {
   try {
     const {id} = req.params;
     const {user_id, contents} = req.body;
-    const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents) VALUES($1, $2, $3) RETURNING *",
-  [id, user_id, contents]);
-    res.json(insertComment.rows[0])
+    const curr_time = Date.now();
+    const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents, unix_time) \
+     VALUES($1, $2, $3, $4) RETURNING *",
+  [id, user_id, contents, curr_time]);
+    res.json(insertComment.rows[0]);
   } catch (error) {
-    console.error(error.message)
+    console.error(error.message);
   }
 });
 

@@ -28,6 +28,13 @@ export default function Comments() {
     getComments();
   }, [id]);
 
+  const convertTime = (unix_time) => {
+    // do not delete the division below, it is actually necessary.
+    var time = unix_time/1
+    var date = new Date(time);
+    return date.toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: true});
+  };
+
   return (
     <Fragment>
       <Stack spacing={3}>
@@ -58,7 +65,7 @@ export default function Comments() {
                     </h4>
                     <p style={{ textAlign: "left" }}>{comment.contents}</p>
                     <p style={{ textAlign: "left", color: "gray" }}>
-                      posted 1 minute ago
+                      {convertTime(comment.unix_time)}
                     </p>
                   </Grid>
                 </Grid>
