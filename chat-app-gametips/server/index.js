@@ -49,6 +49,21 @@ app.post("/newUser", async (req, res) => {
   }
 });
 
+// get a users previous tips
+
+app.get("/tips/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    userTips = await pool.query(
+      "SELECT * FROM tips WHERE creator = $1", 
+      [user_id]
+    );
+    res.json(userTips.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 app.post("/threads", async (req, res) => {
   try {
     const { gameName, description } = req.body;
