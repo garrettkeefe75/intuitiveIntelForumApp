@@ -42,9 +42,26 @@ const InputThread = () => {
       <Fragment>
         <form>
           <Container maxWidth="md">
-            <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
-              Create A New Thread
-            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={8}>
+                <Typography
+                  variant="h2"
+                  paddingTop="100px"
+                  paddingBottom="-50px"
+                  sx={{ textAlign: "center" }}
+                >
+                  Create A New Thread
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <img
+                  padding="40px"
+                  width="300"
+                  height="400"
+                  src={require("/Users/nandu/Desktop/capstone4500/intuitiveIntelForumApp/chat-app-gametips/frontend/src/pngfind.com-mario-bros-png-2835524.png")}
+                />
+              </Grid>
+            </Grid>
             <Grid
               container
               spacing={8}
@@ -58,13 +75,13 @@ const InputThread = () => {
                 <TextField
                   id="inputGameName"
                   label="Input Game Name"
-                  color="secondary"
+                  color="primary"
                   variant="outlined"
                   value={gameName}
                   onChange={(e) => {
                     setGameName(e.target.value);
                   }}
-                  sx={{ width: 300, marginTop: "15px" }}
+                  sx={{ width: 400, marginTop: "15px" }}
                 />
                 <TextareaAutosize
                   id="inputGameDescription"
@@ -75,13 +92,13 @@ const InputThread = () => {
                   }}
                   value={description}
                   minRows={4}
-                  style={{ width: 300, marginTop: "15px", padding: "14px" }}
+                  style={{ width: 400, marginTop: "15px", padding: "14px" }}
                 />
-              </Grid>
-              <Grid item>
-                <Button variant="contained" onClick={onSubmitForm}>
-                  Add Thread
-                </Button>
+                <Grid item sm={2} style={{ marginTop: "10px" }}>
+                  <Button variant="contained" onClick={onSubmitForm}>
+                    Add Thread
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Container>

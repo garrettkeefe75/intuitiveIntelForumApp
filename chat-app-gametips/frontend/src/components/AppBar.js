@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
 
 export default function ButtonAppBar() {
   const [profile, setProfile] = useState([]);
@@ -87,6 +88,16 @@ export default function ButtonAppBar() {
               sx={{ mr: 2 }}
             >
               <MenuIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              href="/"
+            >
+              <HomeIcon />
             </IconButton>
             <Typography
               variant="h3"
