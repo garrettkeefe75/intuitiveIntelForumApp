@@ -49,6 +49,21 @@ app.post("/newUser", async (req, res) => {
   }
 });
 
+// get a users previous tips
+
+app.get("/tips/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    userTips = await pool.query(
+      "SELECT * FROM tips WHERE creator = $1", 
+      [user_id]
+    );
+    res.json(userTips.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 app.post("/threads", async (req, res) => {
   try {
     const { gameName, description } = req.body;
@@ -80,7 +95,8 @@ app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const oneThread = await pool.query(
-      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, users.imgurl \
+      "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, \
+       users.imgurl, thread_contents.unix_time \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
        WHERE thread_contents.thread_id = $1",
       [id]
@@ -94,15 +110,19 @@ app.get("/threads/:id", async (req, res) => {
   }
 });
 
+// posts a comment to a thread
+
 app.post("/threads/:id", async (req, res) => {
   try {
     const {id} = req.params;
     const {user_id, contents} = req.body;
-    const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents) VALUES($1, $2, $3) RETURNING *",
-  [id, user_id, contents]);
-    res.json(insertComment.rows[0])
+    const curr_time = Date.now();
+    const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents, unix_time) \
+     VALUES($1, $2, $3, $4) RETURNING *",
+  [id, user_id, contents, curr_time]);
+    res.json(insertComment.rows[0]);
   } catch (error) {
-    console.error(error.message)
+    console.error(error.message);
   }
 });
 
@@ -122,6 +142,21 @@ app.put("/threads/:id", async (req, res) => {
   }
 });
 
+// delete a comment from a thread
+
+app.delete("/threads/:thread_id/:content_id", async (req, res) => {
+  try {
+    const {thread_id, content_id} = req.params;
+    const deleteComment = await pool.query(
+      "DELETE FROM thread_contents WHERE content_id = $1",
+      [content_id]
+    );
+    res.json("Comment deleted!");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 //delete a thread
 //Add on more details if needed to upadtre on the thread
 app.delete("/threads/:id", async (req, res) => {
@@ -129,6 +164,10 @@ app.delete("/threads/:id", async (req, res) => {
     const { id } = req.params;
     const deleteThread = await pool.query(
       "DELETE FROM thread WHERE thread_id = $1",
+      [id]
+    );
+    const deleteThreadContents = await pool.query(
+      "DELETE FROM thread_contents WHERE thread_id = $1",
       [id]
     );
     res.json("Thread is deleted");

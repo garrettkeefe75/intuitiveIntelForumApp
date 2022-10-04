@@ -81,7 +81,7 @@ const InputThread = () => {
                   onChange={(e) => {
                     setGameName(e.target.value);
                   }}
-                  sx={{ width: 400, marginTop: "15px" }}
+                  sx={{ width: 600, marginTop: "15px" }}
                 />
                 <TextareaAutosize
                   id="inputGameDescription"
@@ -92,7 +92,7 @@ const InputThread = () => {
                   }}
                   value={description}
                   minRows={4}
-                  style={{ width: 400, marginTop: "15px", padding: "14px" }}
+                  style={{ width: 600, marginTop: "15px", padding: "14px" }}
                 />
                 <Grid item sm={2} style={{ marginTop: "10px" }}>
                   <Button variant="contained" onClick={onSubmitForm}>
