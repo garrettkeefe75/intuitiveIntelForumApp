@@ -58,7 +58,7 @@ const InputThread = () => {
                   padding="40px"
                   width="300"
                   height="400"
-                  src={require("/Users/nandu/Desktop/capstone4500/intuitiveIntelForumApp/chat-app-gametips/frontend/src/pngfind.com-mario-bros-png-2835524.png")}
+                  src={require("../pngfind.com-mario-bros-png-2835524.png")}
                 />
               </Grid>
             </Grid>

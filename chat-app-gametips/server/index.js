@@ -96,9 +96,10 @@ app.get("/threads/:id", async (req, res) => {
     const { id } = req.params;
     const oneThread = await pool.query(
       "SELECT thread_contents.content_id, thread_contents.user_id, users.username, thread_contents.contents, \
-       users.imgurl, thread_contents.unix_time \
+       users.imgurl, thread_contents.unix_time, thread_contents.like_dislike_ratio \
        FROM thread_contents LEFT JOIN users ON thread_contents.user_id = users.user_id \
-       WHERE thread_contents.thread_id = $1",
+       WHERE thread_contents.thread_id = $1 \
+       ORDER BY thread_contents.unix_time ASC",
       [id]
     );
     res.json(oneThread.rows);
@@ -137,6 +138,34 @@ app.put("/threads/:id", async (req, res) => {
       [description, id]
     );
     res.json("Thread is updated");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//
+
+app.put("/threads/:thread_id/:content_id/like", async (req, res) => {
+  try {
+    const {thread_id, content_id} = req.params;
+    const likeComment = await pool.query(
+      "UPDATE thread_contents SET like_dislike_ratio = like_dislike_ratio + 1 WHERE content_id = $1",
+      [content_id]
+    );
+    res.json("Comment liked!");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.put("/threads/:thread_id/:content_id/dislike", async (req, res) => {
+  try {
+    const {thread_id, content_id} = req.params;
+    const likeComment = await pool.query(
+      "UPDATE thread_contents SET like_dislike_ratio = like_dislike_ratio - 1 WHERE content_id = $1",
+      [content_id]
+    );
+    res.json("Comment disliked!");
   } catch (error) {
     console.error(error.message);
   }

@@ -8,7 +8,7 @@ import {
   Grid,
   Paper,
   Typography,
-  Button,
+//  Button,
 } from "@material-ui/core";
 import ButtonAppBar from "./AppBar";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -16,8 +16,8 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { IconButton } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const imgLink =
-  "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
+//const imgLink =
+  //"https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 export default function Comments() {
   //Create functions to talk to database
@@ -49,6 +49,72 @@ export default function Comments() {
       minute: "numeric",
       hour12: true,
     });
+  };
+
+  function setLike(commentID) {
+    document.cookie=commentID+'=y';
+  }
+
+  function setDislike(commentID) {
+    document.cookie=commentID+'=n';
+  }
+
+  function hasLiked(commentID) {
+    var cookies=document.cookie.split(';');
+    for (var i=0;i<cookies.length;i++) {
+        var cookie=cookies[i].split('=');
+        if (cookie.length >= 2 && cookie[0]==commentID && cookie[1]==='y') return true;
+    }
+    return false;
+  }
+
+  function hasDisliked(commentID) {
+    var cookies=document.cookie.split(';');
+    for (var i=0;i<cookies.length;i++) {
+        var cookie=cookies[i].split('=');
+        if (cookie.length >= 2 && cookie[0]==commentID && cookie[1]==='n') return true;
+    }
+    return false;
+  }
+
+  const thumbsUp = async (comment) => {
+    if(!hasLiked(comment.content_id)) {
+      try {
+        var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/like";
+        await fetch(URI , {method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        comment.like_dislike_ratio += 1;
+        setLike(comment.content_id);
+      } catch (error) {
+        console.error(error.message);
+        alert("Something went wrong!");
+      }
+    } else {
+      alert("You cannot like a post twice!");
+    }
+  };
+
+  const thumbsDown = async (comment) => {
+    if(!hasDisliked(comment.content_id)) {
+      try {
+        var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/dislike";
+        await fetch(URI , {method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        comment.like_dislike_ratio -= 1;
+        setDislike(comment.content_id);
+      } catch (error) {
+        console.error(error.message);
+        alert("Something went wrong!");
+      }
+    } else {
+      alert("You cannot dislike a post twice!");
+    }
   };
 
   if (spinner) {
@@ -99,21 +165,21 @@ export default function Comments() {
                         <Grid container>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
-                              <IconButton size="large">
+                              <IconButton size="large" onClick={() => thumbsUp(comment)}>
                                 <ThumbUpIcon color="primary" />
                               </IconButton>
                             </p>
                           </Grid>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
-                              <IconButton size="large">
+                              <IconButton size="large" onClick={() => thumbsDown(comment)}>
                                 <ThumbDownIcon color="warning" />
                               </IconButton>
                             </p>
                           </Grid>
                         </Grid>
                         <p style={{ textAlign: "left", color: "green" }}>
-                          0 people liked this
+                          {comment.like_dislike_ratio}
                         </p>
                       </Grid>
                     </Grid>
