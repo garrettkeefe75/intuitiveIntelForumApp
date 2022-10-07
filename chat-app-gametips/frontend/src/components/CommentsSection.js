@@ -119,7 +119,7 @@ export default function Comments() {
                     </Grid>
                     <Divider
                       variant="fullWidth"
-                      style={{ margin: "30px 10px", backgroundColor: "black" }}
+                      style={{ margin: "30px 10px", backgroundColor: "White" }}
                     />
                   </>
                 ))}

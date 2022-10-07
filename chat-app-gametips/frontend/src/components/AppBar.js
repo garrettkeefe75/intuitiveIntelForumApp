@@ -10,6 +10,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function ButtonAppBar() {
   const [profile, setProfile] = useState([]);
@@ -39,6 +41,24 @@ export default function ButtonAppBar() {
     setProfile(null);
     window.localStorage.clear();
     setLoggedIn(false);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const navigateToHomePage = () => {
+    navigate("/");
+  };
+
+  const navigateToViewThreads = () => {
+    navigate("/chatRooms");
   };
 
   const onSuccess = async (res) => {
@@ -86,6 +106,7 @@ export default function ButtonAppBar() {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={handleClick}
             >
               <MenuIcon />
             </IconButton>
@@ -99,6 +120,20 @@ export default function ButtonAppBar() {
             >
               <HomeIcon />
             </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={navigateToHomePage}>Home</MenuItem>
+              <MenuItem onClick={navigateToViewThreads}>
+                View All Threads
+              </MenuItem>
+            </Menu>
             <Typography
               variant="h3"
               component="div"
