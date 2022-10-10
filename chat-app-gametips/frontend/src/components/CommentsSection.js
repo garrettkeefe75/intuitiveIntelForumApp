@@ -51,6 +51,9 @@ export default function Comments() {
     });
   };
 
+  function clearCookie(commentID) {
+    document.cookie=commentID+'=;expires=' + new Date(0).toUTCString();
+  }
   function setLike(commentID) {
     document.cookie=commentID+'=y';
   }
@@ -77,44 +80,62 @@ export default function Comments() {
     return false;
   }
 
-  const thumbsUp = async (comment) => {
-    if(!hasLiked(comment.content_id)) {
-      try {
-        var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/like";
-        await fetch(URI , {method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        comment.like_dislike_ratio += 1;
-        setLike(comment.content_id);
-      } catch (error) {
-        console.error(error.message);
-        alert("Something went wrong!");
-      }
-    } else {
-      alert("You cannot like a post twice!");
+  const sendLikeRatioChange = async (comment, amountToChange) => {
+    try {
+      const body = { amountToChange };
+      var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/changeLikeRatio";
+      await fetch(URI , {method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body)
+      });
+      setComments((comments) => 
+        comments.map((com) => 
+          com.content_id === comment.content_id
+            ? {
+                ...com,
+                like_dislike_ratio: com.like_dislike_ratio + amountToChange
+              }
+            : com
+        )
+      );
+      comment.like_dislike_ratio += amountToChange;
+    } catch (error) {
+      console.error(error.message);
+      alert("Something went wrong!");
+      clearCookie(comment.content_id);
     }
   };
 
-  const thumbsDown = async (comment) => {
-    if(!hasDisliked(comment.content_id)) {
-      try {
-        var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/dislike";
-        await fetch(URI , {method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        comment.like_dislike_ratio -= 1;
-        setDislike(comment.content_id);
-      } catch (error) {
-        console.error(error.message);
-        alert("Something went wrong!");
-      }
+  const thumbsUp = async (comment) => {
+    var amountToChange = 0;
+    if(!hasLiked(comment.content_id)) {
+      if(hasDisliked(comment.content_id))
+        amountToChange += 2;
+      else
+        amountToChange += 1;  
+      setLike(comment.content_id);
     } else {
-      alert("You cannot dislike a post twice!");
+      amountToChange -= 1;
+      clearCookie(comment.content_id);
     }
+    sendLikeRatioChange(comment, amountToChange);
+  };
+
+  const thumbsDown = async (comment) => {
+    var amountToChange = 0;
+    if(!hasDisliked(comment.content_id)) {
+      if(hasLiked(comment.content_id))
+        amountToChange -= 2;
+      else
+        amountToChange -= 1;  
+      setDislike(comment.content_id);
+    } else {
+      amountToChange += 1;
+      clearCookie(comment.content_id);
+    }
+    sendLikeRatioChange(comment, amountToChange);
   };
 
   if (spinner) {
@@ -166,14 +187,14 @@ export default function Comments() {
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
                               <IconButton size="large" onClick={() => thumbsUp(comment)}>
-                                <ThumbUpIcon color="primary" />
+                                <ThumbUpIcon color={hasLiked(comment.content_id) ? "primary" : "disabled"} />
                               </IconButton>
                             </p>
                           </Grid>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
                               <IconButton size="large" onClick={() => thumbsDown(comment)}>
-                                <ThumbDownIcon color="warning" />
+                                <ThumbDownIcon color={hasDisliked(comment.content_id) ? "warning" : "disabled"} />
                               </IconButton>
                             </p>
                           </Grid>

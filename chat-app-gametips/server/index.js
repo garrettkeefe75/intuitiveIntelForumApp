@@ -145,27 +145,15 @@ app.put("/threads/:id", async (req, res) => {
 
 //
 
-app.put("/threads/:thread_id/:content_id/like", async (req, res) => {
+app.put("/threads/:thread_id/:content_id/changeLikeRatio", async (req, res) => {
   try {
     const {thread_id, content_id} = req.params;
+    const {amountToChange} = req.body;
     const likeComment = await pool.query(
-      "UPDATE thread_contents SET like_dislike_ratio = like_dislike_ratio + 1 WHERE content_id = $1",
-      [content_id]
+      "UPDATE thread_contents SET like_dislike_ratio = like_dislike_ratio + $1 WHERE content_id = $2",
+      [amountToChange, content_id]
     );
     res.json("Comment liked!");
-  } catch (error) {
-    console.error(error.message);
-  }
-});
-
-app.put("/threads/:thread_id/:content_id/dislike", async (req, res) => {
-  try {
-    const {thread_id, content_id} = req.params;
-    const likeComment = await pool.query(
-      "UPDATE thread_contents SET like_dislike_ratio = like_dislike_ratio - 1 WHERE content_id = $1",
-      [content_id]
-    );
-    res.json("Comment disliked!");
   } catch (error) {
     console.error(error.message);
   }
