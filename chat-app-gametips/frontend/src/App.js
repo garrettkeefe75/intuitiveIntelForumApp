@@ -7,6 +7,7 @@ import HomePage from "./components/HomePage";
 import ThreadListingPage from "./components/ThreadsLanding";
 import Comments from "./components/CommentsSection";
 import SignUp from "./components/SignUp";
+import TipsComponent from "./components/TipCardComponent";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/chatRooms" element={<ThreadListingPage />} />
           <Route path="/Comments/:id" element={<Comments />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/Tips" element={<TipsComponent />} />
         </Routes>
       </Router>
     </div>
