@@ -61,6 +61,10 @@ export default function ButtonAppBar() {
     navigate("/chatRooms");
   };
 
+  const navigateToViewTips = () => {
+    navigate("/Tips");
+  };
+
   const onSuccess = async (res) => {
     var possibleUser = [];
     const email = res.profileObj.email;
@@ -133,6 +137,7 @@ export default function ButtonAppBar() {
               <MenuItem onClick={navigateToViewThreads}>
                 View All Threads
               </MenuItem>
+              <MenuItem onClick={navigateToViewTips}>View Tips</MenuItem>
             </Menu>
             <Typography
               variant="h3"
