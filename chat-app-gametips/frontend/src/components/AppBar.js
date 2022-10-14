@@ -68,7 +68,6 @@ export default function ButtonAppBar() {
   const onSuccess = async (res) => {
     var possibleUser = [];
     const email = res.profileObj.email;
-    const name = res.profileObj.name;
     try {
       const response1 = await fetch(
         "http://localhost:5000/getUser/".concat(email)
