@@ -9,8 +9,7 @@ app.use(express.json());
 
 //Routes
 
-//Create a thread
-
+//Get a user by their email address
 app.get("/getUser/:email", async (req, res) => {
   try {
     const { email } = req.params;
@@ -23,6 +22,7 @@ app.get("/getUser/:email", async (req, res) => {
   }
 });
 
+//Check if a given username is available
 app.get("/checkUserName/:user", async (req, res) => {
   try {
     const { userName } = req.params;
@@ -36,6 +36,7 @@ app.get("/checkUserName/:user", async (req, res) => {
   }
 });
 
+//Add a new user to the database
 app.post("/newUser", async (req, res) => {
   try {
     const { email, name, imgurl } = req.body;
@@ -54,7 +55,6 @@ app.post("/newUser", async (req, res) => {
 });
 
 // get a users previous tips
-
 app.get("/tips/:user_id", async (req, res) => {
   try {
     const {user_id} = req.params;
@@ -68,6 +68,82 @@ app.get("/tips/:user_id", async (req, res) => {
   }
 });
 
+//get a specific tip
+app.get("/tips/tip/:tip_id", async (req, res) => {
+  try {
+    const {tip_id} = req.params;
+    tip = await pool.query(
+      "SELECT * FROM tips WHERE tipid = $1",
+      [tip_id]
+    );
+    res.json(tip.rows)
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//delete a specific tip
+app.delete("/tips/tip/:tip_id", async (req, res) => {
+  try {
+    const {tip_id} = req.params;
+    tip = await pool.query(
+      "DELETE FROM tips WHERE tipid = $1",
+      [tip_id]
+    );
+    res.json("Tip deleted.")
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//Post a tip to database
+app.post("/tips/tip", async (req, res) => {
+  try {
+    const {title, explanation, user_id, character, 
+      map, skillLevel, address} = req.body;
+    var arr = [];
+    arr.push(title);
+    arr.push(explanation);
+    arr.push(address);
+    var query = "INSERT INTO tips (title, explanation, address";
+    var numEle = 3;
+    var query2 = "VALUES($1, $2, $3";
+    if(user_id != -1){
+      arr.push(user_id);
+      query = query + ", creator";
+      numEle++;
+      query2 = query2 + ", $" + numEle.toString();
+    }
+    if(character != -1){
+      arr.push(character);
+      query = query + ", character";
+      numEle++;
+      query2 = query2 + ", $" + numEle.toString();
+    }
+    if(map != -1){
+      arr.push(map);
+      query = query + ", map";
+      numEle++;
+      query2 = query2 + ", $" + numEle.toString();
+    }
+    if(skillLevel != -1){
+      arr.push(skillLevel);
+      query = query + ", skilllevel";
+      numEle++;
+      query2 = query2 + ", $" + numEle.toString();
+    }
+    query = query + ") " + query2 + ") RETURNING *"
+    const newTip = await pool.query(
+      query,
+      arr
+    );
+    res.json(newTip.rows[0]);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+//Post a new thread
 app.post("/threads", async (req, res) => {
   try {
     const { gameName, description } = req.body;
@@ -83,7 +159,6 @@ app.post("/threads", async (req, res) => {
 });
 
 //get all threads
-
 app.get("/threads", async (req, res) => {
   try {
     const allThreads = await pool.query("SELECT * FROM thread");
@@ -94,7 +169,6 @@ app.get("/threads", async (req, res) => {
 });
 
 //queries database for the thread contents of a given thread. returns all rows.
-
 app.get("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -116,7 +190,6 @@ app.get("/threads/:id", async (req, res) => {
 });
 
 // posts a comment to a thread
-
 app.post("/threads/:id", async (req, res) => {
   try {
     const {id} = req.params;
@@ -132,7 +205,6 @@ app.post("/threads/:id", async (req, res) => {
 });
 
 //update thread
-
 app.put("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -147,8 +219,7 @@ app.put("/threads/:id", async (req, res) => {
   }
 });
 
-//
-
+//Update like/dislike ratio on a comment
 app.put("/threads/:thread_id/:content_id/changeLikeRatio", async (req, res) => {
   try {
     const {thread_id, content_id} = req.params;
@@ -164,7 +235,6 @@ app.put("/threads/:thread_id/:content_id/changeLikeRatio", async (req, res) => {
 });
 
 // delete a comment from a thread
-
 app.delete("/threads/:thread_id/:content_id", async (req, res) => {
   try {
     const {thread_id, content_id} = req.params;
@@ -178,8 +248,7 @@ app.delete("/threads/:thread_id/:content_id", async (req, res) => {
   }
 });
 
-//delete a thread
-//Add on more details if needed to upadtre on the thread
+//delete a thread and its contents
 app.delete("/threads/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -196,19 +265,6 @@ app.delete("/threads/:id", async (req, res) => {
     console.error(error.message);
   }
 });
-
-// app.get("/", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const oneThread = await pool.query(
-//       "SELECT * FROM thread WHERE thread_id = $1",
-//       [id]
-//     );
-//     res.json(oneThread.rows[0]);
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// });
 
 app.listen(5000, () => {
   console.log("started on port 5000");
