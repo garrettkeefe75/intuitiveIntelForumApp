@@ -8,7 +8,8 @@ import {
   Grid,
   Paper,
   Typography,
-//  Button,
+  TextField,
+  //  Button,
 } from "@material-ui/core";
 import ButtonAppBar from "./AppBar";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -17,7 +18,7 @@ import { IconButton } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
 //const imgLink =
-  //"https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
+//"https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
 export default function Comments() {
   //Create functions to talk to database
@@ -52,30 +53,32 @@ export default function Comments() {
   };
 
   function clearCookie(commentID) {
-    document.cookie=commentID+'=;expires=' + new Date(0).toUTCString();
+    document.cookie = commentID + "=;expires=" + new Date(0).toUTCString();
   }
   function setLike(commentID) {
-    document.cookie=commentID+'=y';
+    document.cookie = commentID + "=y";
   }
 
   function setDislike(commentID) {
-    document.cookie=commentID+'=n';
+    document.cookie = commentID + "=n";
   }
 
   function hasLiked(commentID) {
-    var cookies=document.cookie.split(';');
-    for (var i=0;i<cookies.length;i++) {
-        var cookie=cookies[i].split('=');
-        if (cookie.length >= 2 && cookie[0]==commentID && cookie[1]==='y') return true;
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie.length >= 2 && cookie[0] === commentID && cookie[1] === "y")
+        return true;
     }
     return false;
   }
 
   function hasDisliked(commentID) {
-    var cookies=document.cookie.split(';');
-    for (var i=0;i<cookies.length;i++) {
-        var cookie=cookies[i].split('=');
-        if (cookie.length >= 2 && cookie[0]==commentID && cookie[1]==='n') return true;
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].split("=");
+      if (cookie.length >= 2 && cookie[0] === commentID && cookie[1] === "n")
+        return true;
     }
     return false;
   }
@@ -83,19 +86,23 @@ export default function Comments() {
   const sendLikeRatioChange = async (comment, amountToChange) => {
     try {
       const body = { amountToChange };
-      var URI = "http://localhost:5000/threads/".concat(String(id)) + "/".concat(String(comment.content_id)) + "/changeLikeRatio";
-      await fetch(URI , {method: "PUT",
+      var URI =
+        "http://localhost:5000/threads/".concat(String(id)) +
+        "/".concat(String(comment.content_id)) +
+        "/changeLikeRatio";
+      await fetch(URI, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
-      setComments((comments) => 
-        comments.map((com) => 
+      setComments((comments) =>
+        comments.map((com) =>
           com.content_id === comment.content_id
             ? {
                 ...com,
-                like_dislike_ratio: com.like_dislike_ratio + amountToChange
+                like_dislike_ratio: com.like_dislike_ratio + amountToChange,
               }
             : com
         )
@@ -110,11 +117,9 @@ export default function Comments() {
 
   const thumbsUp = async (comment) => {
     var amountToChange = 0;
-    if(!hasLiked(comment.content_id)) {
-      if(hasDisliked(comment.content_id))
-        amountToChange += 2;
-      else
-        amountToChange += 1;  
+    if (!hasLiked(comment.content_id)) {
+      if (hasDisliked(comment.content_id)) amountToChange += 2;
+      else amountToChange += 1;
       setLike(comment.content_id);
     } else {
       amountToChange -= 1;
@@ -125,11 +130,9 @@ export default function Comments() {
 
   const thumbsDown = async (comment) => {
     var amountToChange = 0;
-    if(!hasDisliked(comment.content_id)) {
-      if(hasLiked(comment.content_id))
-        amountToChange -= 2;
-      else
-        amountToChange -= 1;  
+    if (!hasDisliked(comment.content_id)) {
+      if (hasLiked(comment.content_id)) amountToChange -= 2;
+      else amountToChange -= 1;
       setDislike(comment.content_id);
     } else {
       amountToChange += 1;
@@ -155,15 +158,23 @@ export default function Comments() {
           <Typography variant="h3" style={{ textAlign: "center" }}>
             Game Name
           </Typography>
-          <div style={{ padding: 100 }} className="App">
-            <Paper
-              style={{
-                padding: "40px 20px",
-                backgroundColor: "#330000",
-                color: "white",
-              }}
-            >
-              <List style={{ maxHeight: "100%", overflow: "auto" }}>
+          <div
+            style={{ paddingLeft: 300, paddingRight: 300, paddingBottom: 50 }}
+            className="App"
+          >
+            <Paper>
+              <List
+                // style={{ maxHeight: "100%", overflow: "auto" }}
+                sx={{
+                  width: "100%",
+                  maxWidth: 900,
+                  bgcolor: "beige",
+                  position: "relative",
+                  padding: "40px",
+                  overflow: "auto",
+                  maxHeight: 600,
+                }}
+              >
                 {comments.map((comment) => (
                   <>
                     <Grid
@@ -180,21 +191,39 @@ export default function Comments() {
                           {comment.username}
                         </h4>
                         <p style={{ textAlign: "left" }}>{comment.contents}</p>
-                        <p style={{ textAlign: "left", color: "white" }}>
+                        <p style={{ textAlign: "left", color: "black" }}>
                           {convertTime(comment.unix_time)}
                         </p>
                         <Grid container>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
-                              <IconButton size="large" onClick={() => thumbsUp(comment)}>
-                                <ThumbUpIcon color={hasLiked(comment.content_id) ? "primary" : "disabled"} />
+                              <IconButton
+                                size="large"
+                                onClick={() => thumbsUp(comment)}
+                              >
+                                <ThumbUpIcon
+                                  color={
+                                    hasLiked(comment.content_id)
+                                      ? "primary"
+                                      : "disabled"
+                                  }
+                                />
                               </IconButton>
                             </p>
                           </Grid>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
-                              <IconButton size="large" onClick={() => thumbsDown(comment)}>
-                                <ThumbDownIcon color={hasDisliked(comment.content_id) ? "warning" : "disabled"} />
+                              <IconButton
+                                size="large"
+                                onClick={() => thumbsDown(comment)}
+                              >
+                                <ThumbDownIcon
+                                  color={
+                                    hasDisliked(comment.content_id)
+                                      ? "warning"
+                                      : "disabled"
+                                  }
+                                />
                               </IconButton>
                             </p>
                           </Grid>
@@ -206,12 +235,20 @@ export default function Comments() {
                     </Grid>
                     <Divider
                       variant="fullWidth"
-                      style={{ margin: "30px 10px", backgroundColor: "White" }}
+                      style={{ margin: "30px 10px", backgroundColor: "black" }}
                     />
                   </>
                 ))}
               </List>
             </Paper>
+            <TextField
+              id="filled-basic"
+              label="Post Comment"
+              variant="filled"
+              margin="normal"
+              fullWidth
+              style={{ backgroundColor: "white" }}
+            />
           </div>
         </Stack>
       </Fragment>

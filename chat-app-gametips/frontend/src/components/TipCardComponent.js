@@ -44,72 +44,83 @@ export default function TipsComponent() {
   useEffect(() => {
     const getTips = async (user_id) => {
       try {
-        const response = await fetch("http://localhost:5000/tips/".concat(String(user_id)));
+        const response = await fetch(
+          "http://localhost:5000/tips/".concat(String(user_id))
+        );
         const jsonData = await response.json();
         setTips(jsonData);
       } catch (error) {
         console.error(error.message);
       }
     };
-    if (loggedIn)
-      getTips(profile.user_id);
+    if (loggedIn) getTips(profile.user_id);
   }, [profile, loggedIn]);
-
-
 
   if (!loggedIn) {
     return (
       <Fragment>
         <Stack spacing={3}>
           <ButtonAppBar />
-          <Typography variant="h2" component="div" align="center" color="primary">
+          <Typography
+            variant="h2"
+            component="div"
+            align="center"
+            color="primary"
+          >
             No tips to display, try logging in.
           </Typography>
         </Stack>
       </Fragment>
-
-    )
+    );
   } else if (tips.length === 0) {
     return (
       <Fragment>
         <Stack spacing={3}>
           <ButtonAppBar />
-          <Typography variant="h2" component="div" align="center" color="primary">
+          <Typography
+            variant="h2"
+            component="div"
+            align="center"
+            color="primary"
+          >
             No tips to display, try making some!
           </Typography>
         </Stack>
       </Fragment>
-    )
+    );
   } else {
     return (
       <Fragment>
         <Stack spacing={3}>
           <ButtonAppBar />
-          <Box className={classes.root}>
-            {tips.map((tip) => (
-              <Card key={tip.tipid}>
-                <CardHeader
-                  avatar={<Avatar>N</Avatar>}
-                  title={tip.title}
-                  subheader="Card sub heading"
-                  action={
-                    <IconButton>
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                />
-                <CardContent>
-                  <Typography variant="h3">{tip.explanation}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button>share</Button>
-                </CardActions>
-              </Card>
-            ))}
-          </Box>
+          <div
+            style={{ paddingLeft: 400, paddingRight: 300, paddingBottom: 50 }}
+            className="App"
+          >
+            <Box className={classes.root}>
+              {tips.map((tip) => (
+                <Card key={tip.tipid} style={{ backgroundColor: "yellow" }}>
+                  <CardHeader
+                    avatar={<Avatar>N</Avatar>}
+                    title={tip.title}
+                    action={
+                      <IconButton>
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                  />
+                  <CardContent>
+                    <Typography variant="h4">{tip.explanation}</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button>share</Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </Box>
+          </div>
         </Stack>
       </Fragment>
     );
   }
-
 }

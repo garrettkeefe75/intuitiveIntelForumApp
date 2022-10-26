@@ -8,14 +8,18 @@ import ThreadListingPage from "./components/ThreadsLanding";
 import Comments from "./components/CommentsSection";
 import SignUp from "./components/SignUp";
 import TipsComponent from "./components/TipCardComponent";
+import { Helmet } from "react-helmet";
 
 function App() {
   return (
     <div
-      style={{
-        backgroundColor: "#EEE8AA",
-      }}
+    // style={{
+    //   backgroundColor: "#EEE8AA",
+    // }}
     >
+      <Helmet>
+        <style>{"body { background-color: orange; }"}</style>
+      </Helmet>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
