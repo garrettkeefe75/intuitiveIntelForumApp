@@ -197,7 +197,7 @@ app.post("/threads/:id", async (req, res) => {
     const curr_time = Date.now();
     const insertComment = await pool.query("INSERT INTO thread_contents(thread_id, user_id, contents, unix_time) \
      VALUES($1, $2, $3, $4) RETURNING *",
-  [id, user_id, contents, curr_time]);
+    [id, user_id, contents, curr_time]);
     res.json(insertComment.rows[0]);
   } catch (error) {
     console.error(error.message);

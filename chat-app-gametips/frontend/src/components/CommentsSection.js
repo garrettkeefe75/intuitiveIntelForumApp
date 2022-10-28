@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { List, Stack } from "@mui/material";
+import { List, Stack, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import {
@@ -23,8 +23,19 @@ import CircularProgress from "@mui/material/CircularProgress";
 export default function Comments() {
   //Create functions to talk to database
   const [comments, setComments] = useState([]);
+  const [commentToPost, setCommentToPost] = useState("");
   const [spinner, setSpinner] = useState(false);
+  const [profile, setProfile] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
   const { id } = useParams();
+
+  useEffect(() => {
+    const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
+    if (loggedInUser) {
+      setProfile(loggedInUser);
+      setLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     const getComments = async () => {
@@ -141,6 +152,37 @@ export default function Comments() {
     sendLikeRatioChange(comment, amountToChange);
   };
 
+  const onSubmitForm = async (e) => {
+    e.preventDefault();
+    try{
+      const user_id = profile.user_id;
+      const contents = commentToPost;
+      const body = { user_id, contents };
+      const response = await fetch("http://localhost:5000/threads/".concat(String(id)), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const jsonData = await response.json();
+      const newComment = {
+        content_id: jsonData.content_id,
+        user_id: jsonData.user_id,
+        username: profile.name,
+        contents: commentToPost,
+        imgurl: profile.imageUrl,
+        unix_time: jsonData.unix_time,
+        like_dislike_ratio: jsonData.like_dislike_ratio
+      };
+      setCommentToPost("");
+      setComments(comments => [...comments, newComment]);
+      
+    } catch (error){
+      console.log(error);
+    }
+  }
+
   if (spinner) {
     return (
       <Box sx={{ display: "flex" }}>
@@ -211,6 +253,9 @@ export default function Comments() {
                               </IconButton>
                             </p>
                           </Grid>
+                          <p style={{ textAlign: "left", color: "green" }}>
+                            {comment.like_dislike_ratio}
+                          </p>
                           <Grid item>
                             <p style={{ textAlign: "left" }}>
                               <IconButton
@@ -228,9 +273,6 @@ export default function Comments() {
                             </p>
                           </Grid>
                         </Grid>
-                        <p style={{ textAlign: "left", color: "green" }}>
-                          {comment.like_dislike_ratio}
-                        </p>
                       </Grid>
                     </Grid>
                     <Divider
@@ -241,14 +283,25 @@ export default function Comments() {
                 ))}
               </List>
             </Paper>
-            <TextField
-              id="filled-basic"
-              label="Post Comment"
-              variant="filled"
-              margin="normal"
-              fullWidth
-              style={{ backgroundColor: "white" }}
-            />
+            {loggedIn &&
+              <div>
+                <TextField
+                  id="filled-basic"
+                  label="Post Comment"
+                  variant="filled"
+                  margin="normal"
+                  fullWidth
+                  style={{ backgroundColor: "white" }}
+                  value={commentToPost}
+                  onChange={(e) => {
+                    setCommentToPost(e.target.value);
+                  }}
+                />
+                <Button variant="contained" onClick={onSubmitForm}>
+                  Post Comment
+                </Button>
+              </div>
+            }
           </div>
         </Stack>
       </Fragment>
