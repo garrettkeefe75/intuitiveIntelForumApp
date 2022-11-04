@@ -154,17 +154,20 @@ export default function Comments() {
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const user_id = profile.user_id;
       const contents = commentToPost;
       const body = { user_id, contents };
-      const response = await fetch("http://localhost:5000/threads/".concat(String(id)), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        "http://localhost:5000/threads/".concat(String(id)),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
       const jsonData = await response.json();
       const newComment = {
         content_id: jsonData.content_id,
@@ -173,15 +176,14 @@ export default function Comments() {
         contents: commentToPost,
         imgurl: profile.imageUrl,
         unix_time: jsonData.unix_time,
-        like_dislike_ratio: jsonData.like_dislike_ratio
+        like_dislike_ratio: jsonData.like_dislike_ratio,
       };
       setCommentToPost("");
-      setComments(comments => [...comments, newComment]);
-      
-    } catch (error){
+      setComments((comments) => [...comments, newComment]);
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   if (spinner) {
     return (
@@ -201,7 +203,13 @@ export default function Comments() {
             Game Name
           </Typography>
           <div
-            style={{ paddingLeft: 300, paddingRight: 300, paddingBottom: 50 }}
+            style={{
+              paddingLeft: 300,
+              paddingRight: 300,
+              paddingBottom: 50,
+              border: 2,
+              borderRadius: 15,
+            }}
             className="App"
           >
             <Paper>
@@ -283,7 +291,7 @@ export default function Comments() {
                 ))}
               </List>
             </Paper>
-            {loggedIn &&
+            {loggedIn && (
               <div>
                 <TextField
                   id="filled-basic"
@@ -301,7 +309,7 @@ export default function Comments() {
                   Post Comment
                 </Button>
               </div>
-            }
+            )}
           </div>
         </Stack>
       </Fragment>

@@ -12,13 +12,9 @@ import { Helmet } from "react-helmet";
 
 function App() {
   return (
-    <div
-    // style={{
-    //   backgroundColor: "#EEE8AA",
-    // }}
-    >
+    <div>
       <Helmet>
-        <style>{"body { background-color: orange; }"}</style>
+        <style>{"body { background-color: 	#ffb3b3; }"}</style>
       </Helmet>
       <Router>
         <Routes>

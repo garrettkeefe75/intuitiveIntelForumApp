@@ -82,6 +82,7 @@ const InputThread = () => {
                     setGameName(e.target.value);
                   }}
                   sx={{ width: 600, marginTop: "15px" }}
+                  style={{ backgroundColor: "white" }}
                 />
                 <TextareaAutosize
                   id="inputGameDescription"

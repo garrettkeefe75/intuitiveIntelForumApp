@@ -70,6 +70,7 @@ const ListThreads = () => {
         <TableContainer
           component={Paper}
           sx={{
+            border: 2,
             borderRadius: 15,
             margin: "10px 10px",
             maxWidth: 950,

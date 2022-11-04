@@ -24,6 +24,16 @@ const useStyles = makeStyles((theme) =>
         margin: theme.spacing(3),
       },
     },
+    card: {
+      border: 2,
+      borderColor: "grey.500",
+      borderRadius: "16px",
+      transition: "0.3s",
+      boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+      "&:hover": {
+        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+      },
+    },
   })
 );
 
@@ -99,7 +109,13 @@ export default function TipsComponent() {
           >
             <Box className={classes.root}>
               {tips.map((tip) => (
-                <Card key={tip.tipid} style={{ backgroundColor: "yellow" }}>
+                <Card
+                  key={tip.tipid}
+                  style={{
+                    backgroundColor: "#61947d",
+                  }}
+                  className={classes.card}
+                >
                   <CardHeader
                     avatar={<Avatar>N</Avatar>}
                     title={tip.title}
