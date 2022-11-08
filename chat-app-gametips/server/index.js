@@ -44,10 +44,6 @@ app.post("/newUser", async (req, res) => {
       "INSERT INTO users (username, email, imgurl) VALUES($1, $2, $3) RETURNING *",
       [name, email, imgurl]
     );
-    const newGamer = await pool.query(
-      "INSERT INTO gamers (name, userid) VALUES ($1, $2) RETURNING *",
-      [name, newUser.rows[0].user_id]
-    );
     res.json(newUser.rows);
   } catch (error) {
     console.error(error.message);
