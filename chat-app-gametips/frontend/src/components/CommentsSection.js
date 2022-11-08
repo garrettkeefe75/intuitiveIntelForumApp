@@ -67,18 +67,18 @@ export default function Comments() {
     document.cookie = commentID + "=;expires=" + new Date(0).toUTCString();
   }
   function setLike(commentID) {
-    document.cookie = commentID + "=y";
+    document.cookie = commentID + "=y;expires=" + new Date(Date.now() + 10 * 365 * 24 * 60 * 60).toUTCString();
   }
 
   function setDislike(commentID) {
-    document.cookie = commentID + "=n";
+    document.cookie = commentID + "=n;expires=" + new Date(Date.now() + 10 * 365 * 24 * 60 * 60).toUTCString();
   }
 
   function hasLiked(commentID) {
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
       var cookie = cookies[i].split("=");
-      if (cookie.length >= 2 && cookie[0] === commentID && cookie[1] === "y")
+      if (cookie.length >= 2 && Number(cookie[0]) === commentID && cookie[1] === "y")
         return true;
     }
     return false;
@@ -88,7 +88,7 @@ export default function Comments() {
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
       var cookie = cookies[i].split("=");
-      if (cookie.length >= 2 && cookie[0] === commentID && cookie[1] === "n")
+      if (cookie.length >= 2 && Number(cookie[0]) === commentID && cookie[1] === "n")
         return true;
     }
     return false;
