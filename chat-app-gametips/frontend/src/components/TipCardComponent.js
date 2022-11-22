@@ -14,6 +14,8 @@ import { Stack } from "@mui/material";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ButtonAppBar from "./AppBar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -37,11 +39,24 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+const ITEM_HEIGHT = 48;
+
 export default function TipsComponent() {
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [tips, setTips] = useState([]);
   const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const options = ["Delete"];
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
@@ -120,11 +135,39 @@ export default function TipsComponent() {
                     avatar={<Avatar>N</Avatar>}
                     title={tip.title}
                     action={
-                      <IconButton>
+                      <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                      >
                         <MoreVertIcon />
                       </IconButton>
                     }
                   />
+                  <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                      "aria-labelledby": "long-button",
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        width: "20ch",
+                      },
+                    }}
+                  >
+                    {options.map((option) => (
+                      <MenuItem key={option} onClick={handleClose}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Menu>
                   <CardContent>
                     <Typography variant="h4">{tip.explanation}</Typography>
                   </CardContent>
