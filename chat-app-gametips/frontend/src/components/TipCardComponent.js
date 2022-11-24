@@ -81,6 +81,37 @@ export default function TipsComponent() {
     if (loggedIn) getTips(profile.user_id);
   }, [profile, loggedIn]);
 
+  const deleteTip = async (tipid) => {
+    try{
+      const response = await fetch("http://localhost:5000/tips/tip/".concat(String(tipid)), {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const jsonData = await response.json();
+      console.log(jsonData);
+      if(jsonData === "Tip deleted."){
+        setTips(tips.filter(tip => tip.tipid !== tipid));
+      }
+      else{
+        console.error("Tip failed to delete.")
+      }
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  function handleOption(optionString, tipid){
+    if(optionString === "Delete"){
+      console.log("Delete tip " + String(tipid))
+      deleteTip(tipid)
+    }
+    else{
+      console.log("Do Nothing.")
+    }
+  };
+
   if (!loggedIn) {
     return (
       <Fragment>
@@ -163,7 +194,7 @@ export default function TipsComponent() {
                     }}
                   >
                     {options.map((option) => (
-                      <MenuItem key={option} onClick={handleClose}>
+                      <MenuItem key={option} onClick={() => handleOption(option, tip.tipid)}>
                         {option}
                       </MenuItem>
                     ))}
