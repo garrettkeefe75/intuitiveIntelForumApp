@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ButtonAppBar from "./AppBar";
 import InputThread from "./InputThread";
 import ListThreads from "./ListThreads";
+import InputTip from "./InputNewTip";
 
 import { Stack, Box } from "@mui/material";
 import { Fragment } from "react";
@@ -36,7 +37,8 @@ function ThreadListingPage() {
     <Fragment>
       <Stack spacing={3}>
         <ButtonAppBar />
-        <InputThread />
+        {name === "Games" ? <InputThread /> : <InputTip />}
+
         <Box textAlign="center">
           <Button
             variant="contained"
