@@ -8,6 +8,7 @@ import ThreadListingPage from "./components/ThreadsLanding";
 import Comments from "./components/CommentsSection";
 import SignUp from "./components/SignUp";
 import TipsComponent from "./components/TipCardComponent";
+import TipsComments from "./components/TipsComments";
 import { Helmet } from "react-helmet";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/chatRooms" element={<ThreadListingPage />} />
           <Route path="/Comments/:id" element={<Comments />} />
+          <Route path="/TipsComments/:id" element={<TipsComments />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/Tips" element={<TipsComponent />} />
         </Routes>

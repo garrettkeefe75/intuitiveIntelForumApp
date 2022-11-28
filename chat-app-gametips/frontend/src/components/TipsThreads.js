@@ -13,7 +13,7 @@ import {
   Box,
 } from "@mui/material";
 
-const ListThreads = () => {
+const TipsThreads = () => {
   const [threads, setThreads] = useState([]);
 
   const getThreads = async () => {
@@ -45,12 +45,6 @@ const ListThreads = () => {
   return (
     <>
       <Box sx={{ paddingBottom: 25, paddingLeft: 30 }}>
-        {/* <SearchBar
-          sx={{ borderRadius: 15, margin: "10px 10px", maxWidth: 650 }}
-          value={searched}
-          onChange={(searchVal) => requestSearch(searchVal)}
-          onCancelSearch={() => cancelSearch()}
-        /> */}
         <TableContainer
           component={Paper}
           sx={{
@@ -74,19 +68,7 @@ const ListThreads = () => {
                     fontSize: 25,
                   }}
                 >
-                  <strong>Game Name</strong>
-                </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{
-                    fontWeight: "bold",
-                    backgroundColor: "skyblue",
-                    color: "black",
-                    paddingRight: 20,
-                    fontSize: 25,
-                  }}
-                >
-                  <strong>Description</strong>
+                  <strong>Tip Name</strong>
                 </TableCell>
                 <TableCell
                   align="center"
@@ -117,17 +99,10 @@ const ListThreads = () => {
                         fontWeight: "bold",
                         color: "maroon",
                         paddingRight: 20,
-
                         borderBlockColor: "black",
                       }}
                     >
                       {thread.game_name}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{ paddingRight: 20, borderBlockColor: "black" }}
-                    >
-                      {thread.description}{" "}
                     </TableCell>
                     <TableCell
                       align="center"
@@ -138,7 +113,7 @@ const ListThreads = () => {
                       <Button
                         variant="outlined"
                         sx={{ backgroundColor: "#98FB98" }}
-                        href={"/Comments/" + thread.thread_id}
+                        href={"/TipsComments/" + thread.thread_id}
                       >
                         Open Thread
                       </Button>
@@ -164,5 +139,4 @@ const ListThreads = () => {
   );
 };
 
-// eslint-disable-next-line
-export default ListThreads;
+export default TipsThreads;
