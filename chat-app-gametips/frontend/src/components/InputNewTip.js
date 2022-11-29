@@ -21,6 +21,7 @@ const InputTip = () => {
 
   //selected game name
   const [gameName, setGameName] = useState("");
+  const [gameId, setGameId] = useState(null);
 
   const handleChange = (event) => {
     setGameName(event.target.value);
@@ -40,7 +41,7 @@ const InputTip = () => {
 
   const getMapNames = async () => {
     try {
-      const response = await fetch("http://localhost:5000/maps");
+      const response = await fetch("http://localhost:5000/maps/".concat(gameid));
       const jsonData = await response.json();
       setMapNames(jsonData);
     } catch (error) {
@@ -50,7 +51,7 @@ const InputTip = () => {
 
   const getCharacterNames = async () => {
     try {
-      const response = await fetch("http://localhost:5000/characters");
+      const response = await fetch("http://localhost:5000/characters/".concat(gameid));
       const jsonData = await response.json();
       setCharacterNames(jsonData);
     } catch (error) {
@@ -65,9 +66,12 @@ const InputTip = () => {
       setLoggedIn(true);
     }
     getGameNames();
+  }, []);
+
+  useEffect(() => {
     getMapNames();
     getCharacterNames();
-  }, []);
+  }, [gameId])
 
   const onSubmitForm = async (e) => {
     e.preventDefault();

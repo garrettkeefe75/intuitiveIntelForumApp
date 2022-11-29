@@ -18,18 +18,22 @@ app.get("/games", async (req, res) => {
   }
 });
 
-app.get("/maps", async (req, res) => {
+app.get("/maps/:id", async (req, res) => {
   try {
-    const maps = await pool.query("SELECT * FROM maps");
+    const {id} = req.params;
+    const maps = await pool.query("SELECT * FROM maps WHERE game = $1",
+    [id]);
     res.json(maps.rows);
   } catch (error) {
     console.error(error.message);
   }
 });
 
-app.get("/characters", async (req, res) => {
+app.get("/characters/:id", async (req, res) => {
   try {
-    const characters = await pool.query("SELECT * FROM characters");
+    const {id} = req.params;
+    const characters = await pool.query("SELECT * FROM characters WHERE game = $1",
+    [id]);
     res.json(characters.rows);
   } catch (error) {
     console.error(error.message);
