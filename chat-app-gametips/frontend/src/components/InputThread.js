@@ -7,6 +7,9 @@ import {
   Grid,
   TextareaAutosize,
 } from "@mui/material";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 
 const InputThread = () => {
   const [description, setDescription] = useState("");
@@ -14,7 +17,7 @@ const InputThread = () => {
   const [gameNames, setGameNames] = useState([]); // This is the array containg all gamenames, gameids
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  
+
   const getGameNames = async () => {
     try {
       const response = await fetch("http://localhost:5000/games");
@@ -23,6 +26,10 @@ const InputThread = () => {
     } catch (error) {
       console.error(error.message);
     }
+  };
+
+  const handleChange = (event) => {
+    setGameName(event.target.value);
   };
 
   useEffect(() => {
@@ -44,6 +51,9 @@ const InputThread = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
+      }).then(() => {
+        setGameName("");
+        setDescription("");
       });
     } catch (error) {
       console.error(error.message);
@@ -85,18 +95,22 @@ const InputThread = () => {
                 sm={12}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
-                <TextField
-                  id="inputGameName"
-                  label="Input Game Name"
-                  color="primary"
-                  variant="outlined"
+                <InputLabel id="demo-simple-select-label">
+                  Choose Game Name
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
                   value={gameName}
-                  onChange={(e) => {
-                    setGameName(e.target.value);
-                  }}
+                  label="Age"
+                  onChange={handleChange}
                   sx={{ width: 600, marginTop: "15px" }}
                   style={{ backgroundColor: "white" }}
-                />
+                >
+                  {gameNames.map((eachGame) => (
+                    <MenuItem value={eachGame.name}>{eachGame.name}</MenuItem>
+                  ))}
+                </Select>
                 <TextareaAutosize
                   id="inputGameDescription"
                   aria-label="Description"
