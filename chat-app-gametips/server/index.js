@@ -9,6 +9,33 @@ app.use(express.json());
 
 //Routes
 
+app.get("/games", async (req, res) => {
+  try {
+    const games = await pool.query("SELECT name, gameid FROM games");
+    res.json(games.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.get("/maps", async (req, res) => {
+  try {
+    const maps = await pool.query("SELECT * FROM maps");
+    res.json(maps.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.get("/characters", async (req, res) => {
+  try {
+    const characters = await pool.query("SELECT * FROM characters");
+    res.json(characters.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 //Get a user by their email address
 app.get("/getUser/:email", async (req, res) => {
   try {
@@ -96,14 +123,13 @@ app.delete("/tips/tip/:tip_id", async (req, res) => {
 app.post("/tips/tip", async (req, res) => {
   try {
     const {title, explanation, user_id, character, 
-      map, skillLevel, address} = req.body;
+      map} = req.body;
     var arr = [];
     arr.push(title);
     arr.push(explanation);
-    arr.push(address);
-    var query = "INSERT INTO tips (title, explanation, address";
-    var numEle = 3;
-    var query2 = "VALUES($1, $2, $3";
+    var query = "INSERT INTO tips (title, explanation";
+    var numEle = 2;
+    var query2 = "VALUES($1, $2";
     if(user_id != -1){
       arr.push(user_id);
       query = query + ", creator";
@@ -122,12 +148,7 @@ app.post("/tips/tip", async (req, res) => {
       numEle++;
       query2 = query2 + ", $" + numEle.toString();
     }
-    if(skillLevel != -1){
-      arr.push(skillLevel);
-      query = query + ", skilllevel";
-      numEle++;
-      query2 = query2 + ", $" + numEle.toString();
-    }
+  
     query = query + ") " + query2 + ") RETURNING *"
     const newTip = await pool.query(
       query,
@@ -157,7 +178,17 @@ app.post("/threads", async (req, res) => {
 //get all threads
 app.get("/threads", async (req, res) => {
   try {
-    const allThreads = await pool.query("SELECT * FROM thread");
+    const allThreads = await pool.query("SELECT * FROM thread WHERE tipid IS NULL");
+    res.json(allThreads.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//get all tip threads
+app.get("/tipthreads", async (req, res) => {
+  try {
+    const allThreads = await pool.query("SELECT * FROM thread WHERE tipid IS NOT NULL");
     res.json(allThreads.rows);
   } catch (error) {
     console.error(error.message);
