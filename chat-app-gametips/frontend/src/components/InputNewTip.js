@@ -7,6 +7,9 @@ import {
   Grid,
   TextareaAutosize,
 } from "@mui/material";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 
 const InputTip = () => {
   const [tipName, setTipName] = useState("");
@@ -15,7 +18,14 @@ const InputTip = () => {
   const [characterNames, setCharacterNames] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
- 
+
+  //selected game name
+  const [gameName, setGameName] = useState("");
+
+  const handleChange = (event) => {
+    setGameName(event.target.value);
+  };
+
   const getGameNames = async () => {
     try {
       const response = await fetch("http://localhost:5000/games");
@@ -25,6 +35,8 @@ const InputTip = () => {
       console.error(error.message);
     }
   };
+  console.log(gameNames);
+  console.log(characterNames);
 
   const getMapNames = async () => {
     try {
@@ -45,7 +57,7 @@ const InputTip = () => {
       console.error(error.message);
     }
   };
- 
+
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
@@ -108,6 +120,22 @@ const InputTip = () => {
                 sm={12}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
+                <InputLabel id="demo-simple-select-label">
+                  Choose Game Name
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={gameName}
+                  label="Age"
+                  onChange={handleChange}
+                  sx={{ width: 600, marginTop: "15px" }}
+                  style={{ backgroundColor: "white" }}
+                >
+                  {gameNames.map((eachGame) => (
+                    <MenuItem value={eachGame.name}>{eachGame.name}</MenuItem>
+                  ))}
+                </Select>
                 <TextField
                   id="InputTipName"
                   label="Input Tip Name"
