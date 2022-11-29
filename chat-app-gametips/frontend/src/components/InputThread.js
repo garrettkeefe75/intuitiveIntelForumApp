@@ -11,14 +11,27 @@ import {
 const InputThread = () => {
   const [description, setDescription] = useState("");
   const [gameName, setGameName] = useState("");
+  const [gameNames, setGameNames] = useState([]); // This is the array containg all gamenames, gameids
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  
+  const getGameNames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/games");
+      const jsonData = await response.json();
+      setGameNames(jsonData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
       setProfile(loggedInUser);
       setLoggedIn(true);
     }
+    getGameNames();
   }, []);
 
   const onSubmitForm = async (e) => {

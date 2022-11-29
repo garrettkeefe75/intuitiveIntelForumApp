@@ -10,14 +10,51 @@ import {
 
 const InputTip = () => {
   const [tipName, setTipName] = useState("");
+  const [gameNames, setGameNames] = useState([]);
+  const [mapNames, setMapNames] = useState([]);
+  const [characterNames, setCharacterNames] = useState([]);
   const [profile, setProfile] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+ 
+  const getGameNames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/games");
+      const jsonData = await response.json();
+      setGameNames(jsonData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getMapNames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/maps");
+      const jsonData = await response.json();
+      setMapNames(jsonData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getCharacterNames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/characters");
+      const jsonData = await response.json();
+      setCharacterNames(jsonData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+ 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
       setProfile(loggedInUser);
       setLoggedIn(true);
     }
+    getGameNames();
+    getMapNames();
+    getCharacterNames();
   }, []);
 
   const onSubmitForm = async (e) => {

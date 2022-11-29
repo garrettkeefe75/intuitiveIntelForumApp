@@ -18,7 +18,7 @@ const TipsThreads = () => {
 
   const getThreads = async () => {
     try {
-      const response = await fetch("http://localhost:5000/threads");
+      const response = await fetch("http://localhost:5000/tipthreads");
       const jsonData = await response.json();
       setThreads(jsonData);
     } catch (error) {
