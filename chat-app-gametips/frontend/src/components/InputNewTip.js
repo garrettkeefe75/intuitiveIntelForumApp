@@ -21,10 +21,18 @@ const InputTip = () => {
 
   //selected game name
   const [gameName, setGameName] = useState("");
+  const [charName, setCharName] = useState("");
+  const [mapName, setMapName] = useState("");
   const [gameId, setGameId] = useState(null);
 
   const handleChange = (event) => {
     setGameName(event.target.value);
+  };
+  const handleCharChange = (event) => {
+    setCharName(event.target.value);
+  };
+  const handleMapChange = (event) => {
+    setMapName(event.target.value);
   };
 
   const getGameNames = async () => {
@@ -41,7 +49,9 @@ const InputTip = () => {
 
   const getMapNames = async () => {
     try {
-      const response = await fetch("http://localhost:5000/maps/".concat(gameid));
+      const response = await fetch(
+        "http://localhost:5000/maps/".concat(gameId)
+      );
       const jsonData = await response.json();
       setMapNames(jsonData);
     } catch (error) {
@@ -51,13 +61,16 @@ const InputTip = () => {
 
   const getCharacterNames = async () => {
     try {
-      const response = await fetch("http://localhost:5000/characters/".concat(gameid));
+      const response = await fetch(
+        "http://localhost:5000/characters/".concat(gameId)
+      );
       const jsonData = await response.json();
       setCharacterNames(jsonData);
     } catch (error) {
       console.error(error.message);
     }
   };
+  console.log(characterNames);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
@@ -71,7 +84,7 @@ const InputTip = () => {
   useEffect(() => {
     getMapNames();
     getCharacterNames();
-  }, [gameId])
+  }, [gameId]);
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -140,6 +153,48 @@ const InputTip = () => {
                     <MenuItem value={eachGame.name}>{eachGame.name}</MenuItem>
                   ))}
                 </Select>
+                {gameName.length !== 0 || gameName !== "" ? (
+                  <>
+                    <InputLabel id="demo-simple-select-label">
+                      Choose Character Name
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={charName}
+                      label="Age"
+                      onChange={handleCharChange}
+                      sx={{ width: 600, marginTop: "15px" }}
+                      style={{ backgroundColor: "white" }}
+                    >
+                      {characterNames.map((eachGame) => (
+                        <MenuItem value={eachGame.name}>
+                          {eachGame.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <InputLabel id="demo-simple-select-label">
+                      Choose Map Name
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={mapName}
+                      label="Age"
+                      onChange={handleMapChange}
+                      sx={{ width: 600, marginTop: "15px" }}
+                      style={{ backgroundColor: "white" }}
+                    >
+                      {mapNames.map((eachGame) => (
+                        <MenuItem value={eachGame.name}>
+                          {eachGame.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                ) : (
+                  ""
+                )}
                 <TextField
                   id="InputTipName"
                   label="Input Tip Name"
