@@ -25,7 +25,20 @@ const InputTip = () => {
   const [mapName, setMapName] = useState("");
   const [gameId, setGameId] = useState(null);
 
+
+  useEffect(() => {
+    const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
+    if (loggedInUser) {
+      setProfile(loggedInUser);
+      setLoggedIn(true);
+    }
+    getGameNames();
+  }, []);
+
   const handleChange = (event) => {
+    gameNames.forEach(function(currValue, index, arr){
+      if(currValue.name === event.target.value){setGameId(currValue.gameid);}
+    });
     setGameName(event.target.value);
   };
   const handleCharChange = (event) => {
@@ -44,44 +57,36 @@ const InputTip = () => {
       console.error(error.message);
     }
   };
-  console.log(gameNames);
-  console.log(characterNames);
-
-  const getMapNames = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/maps/".concat(gameId)
-      );
-      const jsonData = await response.json();
-      setMapNames(jsonData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const getCharacterNames = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/characters/".concat(gameId)
-      );
-      const jsonData = await response.json();
-      setCharacterNames(jsonData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-  console.log(characterNames);
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
-    if (loggedInUser) {
-      setProfile(loggedInUser);
-      setLoggedIn(true);
-    }
-    getGameNames();
-  }, []);
+    const getMapNames = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/maps/".concat(gameId)
+        );
+        const jsonData = await response.json();
+        setMapNames(jsonData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+  
+    const getCharacterNames = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/characters/".concat(gameId)
+        );
+        const jsonData = await response.json();
+        setCharacterNames(jsonData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
 
-  useEffect(() => {
+    if(gameId === null){
+      console.error("Something went wrong when selecting game name.");
+      return;
+    }
     getMapNames();
     getCharacterNames();
   }, [gameId]);
