@@ -126,16 +126,16 @@ app.delete("/tips/tip/:tip_id", async (req, res) => {
 //Post a tip to database
 app.post("/tips/tip", async (req, res) => {
   try {
-    const {title, explanation, user_id, character, 
-      map} = req.body;
+    const {tipName, tipDesc, user, character, 
+      map, game} = req.body;
     var arr = [];
-    arr.push(title);
-    arr.push(explanation);
+    arr.push(tipName);
+    arr.push(tipDesc);
     var query = "INSERT INTO tips (title, explanation";
     var numEle = 2;
     var query2 = "VALUES($1, $2";
-    if(user_id != -1){
-      arr.push(user_id);
+    if(user != -1){
+      arr.push(user);
       query = query + ", creator";
       numEle++;
       query2 = query2 + ", $" + numEle.toString();
@@ -149,6 +149,12 @@ app.post("/tips/tip", async (req, res) => {
     if(map != -1){
       arr.push(map);
       query = query + ", map";
+      numEle++;
+      query2 = query2 + ", $" + numEle.toString();
+    }
+    if(game != -1){
+      arr.push(game);
+      query = query + ", game";
       numEle++;
       query2 = query2 + ", $" + numEle.toString();
     }
@@ -171,6 +177,20 @@ app.post("/threads", async (req, res) => {
     const newThread = await pool.query(
       "INSERT INTO thread (description, game_name) VALUES($1, $2) RETURNING *",
       [description, gameName]
+    );
+
+    res.json(newThread.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.post("/tipthreads", async (req, res) => {
+  try {
+    const { gameName, tipName, tipid } = req.body;
+    const newThread = await pool.query(
+      "INSERT INTO thread (description, game_name, tipid) VALUES($1, $2, $3) RETURNING *",
+      [tipName, gameName, tipid]
     );
 
     res.json(newThread.rows[0]);
