@@ -13,6 +13,7 @@ import InputLabel from "@mui/material/InputLabel";
 
 const InputTip = () => {
   const [tipName, setTipName] = useState("");
+  const [tipDesc, setTipDesc] = useState("");
   const [gameNames, setGameNames] = useState([]);
   const [mapNames, setMapNames] = useState([]);
   const [characterNames, setCharacterNames] = useState([]);
@@ -25,7 +26,6 @@ const InputTip = () => {
   const [mapName, setMapName] = useState("");
   const [gameId, setGameId] = useState(null);
 
-
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
     if (loggedInUser) {
@@ -36,8 +36,10 @@ const InputTip = () => {
   }, []);
 
   const handleChange = (event) => {
-    gameNames.forEach(function(currValue, index, arr){
-      if(currValue.name === event.target.value){setGameId(currValue.gameid);}
+    gameNames.forEach(function (currValue, index, arr) {
+      if (currValue.name === event.target.value) {
+        setGameId(currValue.gameid);
+      }
     });
     setGameName(event.target.value);
   };
@@ -70,7 +72,7 @@ const InputTip = () => {
         console.error(error.message);
       }
     };
-  
+
     const getCharacterNames = async () => {
       try {
         const response = await fetch(
@@ -83,7 +85,7 @@ const InputTip = () => {
       }
     };
 
-    if(gameId === null){
+    if (gameId === null) {
       console.error("Something went wrong when selecting game name.");
       return;
     }
@@ -208,6 +210,18 @@ const InputTip = () => {
                   value={tipName}
                   onChange={(e) => {
                     setTipName(e.target.value);
+                  }}
+                  sx={{ width: 600, marginTop: "15px" }}
+                  style={{ backgroundColor: "white" }}
+                />
+                <TextField
+                  id="InputTipDesc"
+                  label="Input Tip Description"
+                  color="primary"
+                  variant="outlined"
+                  value={tipDesc}
+                  onChange={(e) => {
+                    setTipDesc(e.target.value);
                   }}
                   sx={{ width: 600, marginTop: "15px" }}
                   style={{ backgroundColor: "white" }}
