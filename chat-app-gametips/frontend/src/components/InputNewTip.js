@@ -25,6 +25,8 @@ const InputTip = () => {
   const [charName, setCharName] = useState("");
   const [mapName, setMapName] = useState("");
   const [gameId, setGameId] = useState(null);
+  const [charId, setCharId] = useState(null);
+  const [mapId, setMapId]= useState(null);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
@@ -41,12 +43,26 @@ const InputTip = () => {
         setGameId(currValue.gameid);
       }
     });
+    setCharName("");
+    setCharId(null);
+    setMapName("");
+    setMapId(null);
     setGameName(event.target.value);
   };
   const handleCharChange = (event) => {
+    characterNames.forEach(function (currValue, index, arr) {
+      if (currValue.name === event.target.value) {
+        setCharId(currValue.charid);
+      }
+    });
     setCharName(event.target.value);
   };
   const handleMapChange = (event) => {
+    mapNames.forEach(function (currValue, index, arr) {
+      if (currValue.name === event.target.value) {
+        setMapId(currValue.mapid);
+      }
+    });
     setMapName(event.target.value);
   };
 
@@ -96,8 +112,22 @@ const InputTip = () => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const body = { tipName };
-      await fetch("http://localhost:5000/threads", {
+      const user = profile.user_id;
+      const character = charId === null ? -1 : charId;
+      const map = mapId === null ? -1 : mapId;
+      const game = gameId === null ? -1 : gameId;
+      const body1 = { tipName, tipDesc, user, character, map, game};
+      const response1 = await fetch("http://localhost:5000/tips/tip", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body1),
+      });
+      const tip = await response1.json();
+      const tipid = tip.tipid;
+      const body = { gameName, tipName, tipid };
+      await fetch("http://localhost:5000/tipthreads", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,6 +139,9 @@ const InputTip = () => {
     }
   };
 
+  if(!loggedIn){
+    return (<></>)
+  }
   return (
     <>
       <Fragment>
