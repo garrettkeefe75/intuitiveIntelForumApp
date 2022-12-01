@@ -76,6 +76,30 @@ const TipsThreads = () => {
                     fontWeight: "bold",
                     backgroundColor: "skyblue",
                     color: "black",
+                    paddingRight: 20,
+                    fontSize: 25,
+                  }}
+                >
+                  <strong>Character</strong>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "skyblue",
+                    color: "black",
+                    paddingRight: 20,
+                    fontSize: 25,
+                  }}
+                >
+                  <strong>Map</strong>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "skyblue",
+                    color: "black",
                     fontSize: 25,
                   }}
                 >
@@ -103,6 +127,28 @@ const TipsThreads = () => {
                       }}
                     >
                       {thread.game_name}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "maroon",
+                        paddingRight: 20,
+                        borderBlockColor: "black",
+                      }}
+                    >
+                      character_dummy
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontWeight: "bold",
+                        color: "maroon",
+                        paddingRight: 20,
+                        borderBlockColor: "black",
+                      }}
+                    >
+                      Map_dummy
                     </TableCell>
                     <TableCell
                       align="center"
