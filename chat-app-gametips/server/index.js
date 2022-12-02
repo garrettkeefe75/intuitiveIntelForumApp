@@ -219,6 +219,17 @@ app.get("/tipthreads", async (req, res) => {
   }
 });
 
+//get tip thread thread_id
+app.get("/tipthreads/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const thread = await pool.query("SELECT * FROM thread WHERE tipid = $1", [id]);
+    res.json(thread.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 //queries database for the thread contents of a given thread. returns all rows.
 app.get("/threads/:id", async (req, res) => {
   try {

@@ -16,6 +16,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ButtonAppBar from "./AppBar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -49,6 +50,7 @@ export default function TipsComponent() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate()
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,7 +58,7 @@ export default function TipsComponent() {
     setAnchorEl(null);
   };
 
-  const options = ["Delete"];
+  const options = ["Delete", "Go to Thread"];
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem("user"));
@@ -102,10 +104,26 @@ export default function TipsComponent() {
     }
   }
 
-  function handleOption(optionString, tipid){
+  async function handleOption(optionString, tipid){
+    const getThreadId = async (tipid) => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/tipthreads/".concat(String(tipid))
+        );
+        const jsonData = await response.json();
+        return jsonData.thread_id
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
     if(optionString === "Delete"){
       console.log("Delete tip " + String(tipid))
       deleteTip(tipid)
+    }
+    else if(optionString === "Go to Thread"){
+      console.log("Going to thread.");
+      var thread_id = await getThreadId(tipid);
+      navigate("/TipsComments/" + String(thread_id))
     }
     else{
       console.log("Do Nothing.")
