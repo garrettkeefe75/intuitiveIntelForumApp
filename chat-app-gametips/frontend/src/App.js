@@ -16,6 +16,7 @@ function App() {
     <div>
       <Helmet>
         <style>{"body { background-color: 	#ffb3b3; }"}</style>
+        <title>Intuitive Intel</title>
       </Helmet>
       <Router>
         <Routes>
